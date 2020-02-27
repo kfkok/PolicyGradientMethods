@@ -1,7 +1,7 @@
 # PolicyMethods
 Implements simple reinforcement learning policy methods such as one step actor critic method on openAI gym environments
 
-####Currently implemented methods
+##Currently implemented methods
 <ul>
     <li>
         <b>One Step Actor Critic</b>
