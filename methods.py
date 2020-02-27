@@ -27,7 +27,7 @@ class OneStepActorCritic():
         action_indice = K.placeholder(shape=1, dtype=tf.int32)
 
         # critic network
-        hidden = Dense(30, activation='sigmoid', kernel_initializer='he_uniform')(state)
+        hidden = Dense(30, activation='tanh', kernel_initializer='he_uniform')(state)
         output = Dense(1, activation='linear', kernel_initializer='he_uniform')(hidden)
         self.critic = Model(name='critic', inputs=state, outputs=output)
         self.critic.summary()
@@ -37,7 +37,7 @@ class OneStepActorCritic():
         critic_gradient = K.gradients(loss=critic_loss, variables=critic_weights)
 
         # actor network
-        actor_hidden = Dense(20, activation='sigmoid', kernel_initializer='he_uniform')(state)
+        actor_hidden = Dense(20, activation='tanh', kernel_initializer='he_uniform')(state)
         output = Dense(action_size, activation='softmax')(actor_hidden)
         self.actor = Model(name='actor', inputs=state, outputs=output)
         self.actor.summary()
