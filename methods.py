@@ -27,7 +27,7 @@ class OneStepActorCritic():
         action_indice = K.placeholder(shape=1, dtype=tf.int32)
 
         # critic network
-        hidden = Dense(30, activation='tanh', kernel_initializer='he_uniform')(state)
+        hidden = Dense(50, activation='tanh', kernel_initializer='he_uniform')(state)
         output = Dense(1, activation='linear', kernel_initializer='he_uniform')(hidden)
         self.critic = Model(name='critic', inputs=state, outputs=output)
         self.critic.summary()
@@ -37,7 +37,7 @@ class OneStepActorCritic():
         critic_gradient = K.gradients(loss=critic_loss, variables=critic_weights)
 
         # actor network
-        actor_hidden = Dense(20, activation='tanh', kernel_initializer='he_uniform')(state)
+        actor_hidden = Dense(50, activation='tanh', kernel_initializer='he_uniform')(state)
         output = Dense(action_size, activation='softmax')(actor_hidden)
         self.actor = Model(name='actor', inputs=state, outputs=output)
         self.actor.summary()
@@ -63,7 +63,7 @@ class OneStepActorCritic():
         td_error = target_value - state_value
         return td_error
 
-    def train(self, state, action, next_state, reward, done, I):
+    def train(self, state, action, next_state, reward, done):
         state = state.reshape(1, self.state_size)
         next_state = next_state.reshape(1, self.state_size)
 
@@ -80,14 +80,6 @@ class OneStepActorCritic():
         actor_weights_delta = multiply_gradient(actor_gradient, self.actor_lr * td_error)
         new_actor_weights = [w + delta_w for w, delta_w in zip(actor_weights, actor_weights_delta)]
 
-        # print("td_error:", td_error)
-        # print("actor_gradient:", actor_gradient[0][0][0:3])
-        # print("actor_weights_delta:", actor_weights_delta[0][0][0:3])
-        # print("new_actor_weights:", new_actor_weights[0][0][0:3])
-        # print("")
-
         # update the weights for critic and actor
         self.critic.set_weights(new_critic_weights)
         self.actor.set_weights(new_actor_weights)
-
-        return I * self.actor_lr

@@ -16,16 +16,15 @@ for e in range(EPISODES):
     done = False
     total_rewards = 0
     state = env.reset()
-    I = 1
 
     while not done:
-        if (e % 50 == 0) and e > 0:
+        if (e % 20 == 0) and e > 0:
             env.render()
 
         action_probabilities = agent.get_action_probabilities(state).flatten()
         action = rand.choice(actions_set, p=action_probabilities)
         next_state, reward, done, _ = env.step(action)
-        I = agent.train(state, action, next_state, reward, done, I)
+        agent.train(state, action, next_state, reward, done)
 
         total_rewards += reward
         state = next_state
